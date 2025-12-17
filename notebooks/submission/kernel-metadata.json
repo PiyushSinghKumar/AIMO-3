@@ -1,0 +1,16 @@
+{
+  "id": "piyushksinghh/aimo-progress-prize-3-submission",
+  "title": "AIMO Progress Prize 3 - Submission",
+  "code_file": "qwen_1.5b_multi_strategy.ipynb",
+  "language": "python",
+  "kernel_type": "notebook",
+  "is_private": true,
+  "enable_gpu": true,
+  "enable_tpu": false,
+  "enable_internet": false,
+  "dataset_sources": [],
+  "competition_sources": [
+    "ai-mathematical-olympiad-progress-prize-3"
+  ],
+  "kernel_sources": []
+}
