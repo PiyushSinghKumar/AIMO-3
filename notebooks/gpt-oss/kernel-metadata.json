@@ -1,0 +1,19 @@
+{
+  "id": "piyushksinghh/aimo-p3-gpt-oss-20b-time-slicing",
+  "title": "AIMO-P3 GPT-OSS-20B Time Slicing",
+  "code_file": "gpt_oss_120b_time_slicing.ipynb",
+  "language": "python",
+  "kernel_type": "notebook",
+  "is_private": true,
+  "enable_gpu": true,
+  "enable_tpu": false,
+  "enable_internet": false,
+  "dataset_sources": [],
+  "model_sources": [
+    "danielhanchen/gpt-oss-20b/Transformers/default/1"
+  ],
+  "competition_sources": [
+    "ai-mathematical-olympiad-progress-prize-3"
+  ],
+  "kernel_sources": []
+}
