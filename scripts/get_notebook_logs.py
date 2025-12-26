@@ -3,7 +3,7 @@
 Fetch Kaggle notebook execution logs and status.
 
 Usage: python3 scripts/get_notebook_logs.py [notebook_name]
-  notebook_name: ensemble (default) or submission
+  notebook_name: ensemble (default), submission, gpt-oss, etc.
 """
 
 import subprocess
@@ -12,21 +12,55 @@ import os
 import sys
 from pathlib import Path
 
-# Notebook slug mapping
-NOTEBOOK_SLUGS = {
-    "ensemble": "piyushksinghh/aimo-p3-ensemble-all-strategies",
-    "submission": "piyushksinghh/aimo-progress-prize-3-submission",
-}
+def load_metadata(notebook_name):
+    """Load kernel metadata from JSON file."""
+    metadata_path = Path(f"notebooks/{notebook_name}/kernel-metadata.json")
 
-# Get notebook name from command line or use default
-notebook_name = sys.argv[1] if len(sys.argv) > 1 else "ensemble"
+    if not metadata_path.exists():
+        return None
 
-if notebook_name not in NOTEBOOK_SLUGS:
-    print(f"Error: Unknown notebook '{notebook_name}'")
-    print(f"Available notebooks: {', '.join(NOTEBOOK_SLUGS.keys())}")
+    try:
+        with open(metadata_path, 'r') as f:
+            metadata = json.load(f)
+            return metadata.get('id')
+    except Exception as e:
+        print(f"Error reading metadata: {e}")
+        return None
+
+def get_available_notebooks():
+    """Get list of available notebooks from notebooks directory."""
+    notebooks_dir = Path("notebooks")
+    if not notebooks_dir.exists():
+        return []
+
+    available = []
+    for item in notebooks_dir.iterdir():
+        if item.is_dir() and (item / "kernel-metadata.json").exists():
+            available.append(item.name)
+
+    return available
+
+# Get notebook name from command line (required)
+if len(sys.argv) < 2:
+    available = get_available_notebooks()
+    print("Error: Notebook name is required")
+    print(f"\nUsage: python3 scripts/get_notebook_logs.py <notebook_name>")
+    if available:
+        print(f"\nAvailable notebooks: {', '.join(available)}")
     sys.exit(1)
 
-KERNEL_SLUG = NOTEBOOK_SLUGS[notebook_name]
+notebook_name = sys.argv[1]
+
+# Load kernel slug from metadata
+KERNEL_SLUG = load_metadata(notebook_name)
+
+if not KERNEL_SLUG:
+    available = get_available_notebooks()
+    print(f"Error: Could not find metadata for notebook '{notebook_name}'")
+    if available:
+        print(f"Available notebooks: {', '.join(available)}")
+    sys.exit(1)
+
 LOGS_DIR = f"./logs/{notebook_name}"
 
 def run_command(cmd):
